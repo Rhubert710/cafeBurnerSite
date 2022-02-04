@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.13.1/themes/base/jquery-ui.css">
+    <link rel="stylesheet" href="/resources/demos/style.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
+    <script src="https://code.jquery.com/ui/1.13.1/jquery-ui.js"></script>
+
+    <title>newFlyerForm</title>
+</head>
+<body>
+
+    <!-- Heading -->
+    {% load static %}
+        <div id="logoDiv">
+            <img id = "logo" src="{% static '/mainApp/cafeLogo.png' %}" alt="cafeLogo">
+        </div>
+        
+        <div id="border" ></div>
+
+        <!-- Form -->
+        <div id="textFomDiv">
+            <form action="/saveFlyerMobile/" method="POST" onsubmit="return validateForm(this)">
+                {% csrf_token %}
+                <div id="selectors">
+                    <div class="selectorDiv">
+                        <label for="Boro">Boro:</label>
+                            <select id="boroSelector" name="Boro" class="selector required">
+                                <option value=""></option>
+                                <option value="brooklyn">Brooklyn</option>
+                                <option value="queens">Queens</option>
+                                <option value="manhattan">Manhattan</option>
+                                <option value="bronx">Bronx</option>
+                                <option value="staten">Staten Island</option>
+                                <option value="nassau">Nassau</option>
+                            </select>
+                    </div>
+                
+                <div class="selectorDiv">
+                    <label for="Event_type">Event Type:</label>
+                        <select id="eventTypeSelector" name="Event_type" class="selector required">
+                            <option value=""></option>
+                            <option value="comedy">Comedy</option>
+                            <option value="food">Food/Drink</option>
+                            <option value="athletic">Athletic</option>
+                            <option value="sports">Sports</option>
+                            <option value="seasonal">Seasonal</option>
+                            <option value="rock">Live Music: Rock</option>
+                            <option value="hipHop">Live Music: HipHop</option>
+                            <option value="dance">Live Music: Dance</option>
+                            <option value="other">Live Music: Other</option>
+                        </select><br><br>
+                </div>
+            </div>
+
+            <label for="Event_date">Event Date:</label>
+            <input type="date" id="eventDate" name="Event_date" class="required" ><br><br>
+            <!-- Event Date:  <div id="datepicker"></div> -->
+
+                <br><p style="width: 80%;"> These fields are optional\n
+                we recommend you fill them out So guests have an easier time finding your event
+                contact info can be an email address, website, or social media account</p>                
+                <label for="Contact_information">Contact Info:</label><br>
+                    <input type="text" id="contactInfo" name="Contact_information" class="textField"><br>
+                <label for="Address">Event Adress:</label><br>
+                    <input type="text" id="address" name="Address" class="textField"><br>
+                    <p>{{imgPk}}</p>
+                    <!-- {% for error in form.errors %}
+                        <p>{{error}}</p>
+                    {% endfor %} -->
+                    <input type="text" name="Flyer_image" id="imgPk" value="{{imgPk}}">
+                    <input type="submit" value="Submit">
+            </form>
+
+            <p id="errorMessage" style="color: red;"></p>
+        </div>
+</body>
+</html>
+<style>
+    #logoDiv{
+        text-align: center;}
+        #logo{
+        
+            height: 10vh;
+            width: auto;}
+  #border{
+    
+    width: 55%;
+    border-bottom: 1px solid #F76F07;
+    margin: auto;
+    padding-right: 5%;
+    margin-bottom: 8.5%;    
+    }
+
+
+    #textFomDiv{
+            /* display: inline-block; */
+            /* background-color: crimson; */
+            /* width: 50%; */
+            flex: 1;
+            /* display: flex;
+            flex-direction: column; */}
+
+        #textFomDiv > * {
+            margin-left:10%;}
+
+        input[type=text] {
+
+            width: 70%;
+            /* padding: 12px 20px; */
+            /* margin-left:2%; */
+            margin-bottom: 2%;
+            display: inline-block;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;}
+
+        .selector, input[type="date"]{
+            border: 1px solid #ccc;
+            border-radius: 4px;}
+        
+        #selectors{
+            display:flex;
+            /* justify-content:space-between; */
+            gap: 10%;
+            padding-bottom: .5%;
+            /* margin-bottom: 10% ; */
+            }
+
+        #imgPk{display: none;}
+         /* input[type=date]{
+            opacity:0;
+            }  */
+        .ui-widget-content .ui-state-default {
+            border: 0px;
+            text-align: center;
+            background: #fff;
+            font-weight: normal;
+            color: #000;}
+
+            .ui-widget-content .ui-state-default:hover {
+                border: 0px;
+                border-radius: 50%;
+                text-align: center;
+                background: rgb(60, 68, 75);
+                font-weight: normal;
+                color: #fff;}
+
+            .ui-widget-content .ui-state-active {
+                border: 0px;
+                border-radius: 50%;
+                background: #F76F07;
+                color: #fff;}
+                tr{height:100%;
+                width: 100%;}
+                /* table  {
+                    
+    table-layout: fixed;
+} */
+
+@media only screen and (max-width: 700px) {
+
+
+    #logo{
+        width: 100vw;
+        height:auto;}
+}
+
+</style>
+
+<script>
+
+    function disableWeekdays(date) {
+        var string = $.datepicker.formatDate('yy-mm-dd', date);
+            
+        var filterDate = new Date(string);
+        var day = filterDate.getDay();
+        return [day != 0 && day !=1 && day !=2]
+    }
+
+
+    $( function() {
+        $( "#datepicker" ).datepicker({ beforeShowDay: disableWeekdays,
+                                                         minDate:0});
+  } );
+
+
+  function validateForm(x) {
+
+    let requiredFields = document.getElementsByClassName("required");
+    // let x = document.forms["myForm"]["fname"].value;
+    var valid = true;
+    for (i = 0; i < requiredFields.length; i++){
+       console.log(requiredFields[i].previousElementSibling.innerHTML);
+       requiredFields[i].style["border-color"] = "black";
+        if (requiredFields[i].value == "") 
+         {
+            requiredFields[i].style["border-color"] = "red";
+            errorMessage.innerHTML += 
+                requiredFields[i].previousElementSibling.innerHTML.slice(0,-1) + " is a required field <br>"
+            valid = false;
+        }
+    }
+    console.log(x)
+    return valid;
+}
+
+    console.log("{{imgPk}}")
+    // console.log("{{error}}")
+</script>
